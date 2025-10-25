@@ -8,11 +8,15 @@
 import Foundation
 
 struct User: Identifiable {
-    let id: UUID
-    let name: String
-    let email: String
+  let id: UUID
+  let name: String
+  let email: String
 }
 
 extension User {
-    static let mock = User(id: UUID(), name: "John Doe", email: "john@example.com")
+  static let mock = User(
+    id: UUID(),
+    name: "John Doe",
+    email: "john@example.com"
+  )
 }
