@@ -7,35 +7,6 @@
 
 import SwiftUI
 
-
-struct User: Identifiable {
-    let id: UUID
-    let name: String
-    let email: String
-    
-    static let mock = User(id: UUID(), name: "John Doe", email: "john@example.com")
-}
-
-struct MovieProductRow: Identifiable {
-    let id: UUID
-    let title: String
-    let genre: String
-    let rating: Double
-    
-    static let mocks: [MovieProductRow] = [
-        MovieProductRow(id: UUID(), title: "Inception", genre: "Sci-Fi", rating: 8.8),
-        MovieProductRow(id: UUID(), title: "The Dark Knight", genre: "Action", rating: 9.0),
-        MovieProductRow(id: UUID(), title: "Interstellar", genre: "Sci-Fi", rating: 8.6),
-        MovieProductRow(id: UUID(), title: "Parasite", genre: "Thriller", rating: 8.6),
-        MovieProductRow(id: UUID(), title: "Joker", genre: "Drama", rating: 8.5),
-        MovieProductRow(id: UUID(), title: "Avengers: Endgame", genre: "Action", rating: 8.4),
-        MovieProductRow(id: UUID(), title: "La La Land", genre: "Musical", rating: 8.0),
-        MovieProductRow(id: UUID(), title: "Titanic", genre: "Romance", rating: 7.8),
-        MovieProductRow(id: UUID(), title: "The Matrix", genre: "Sci-Fi", rating: 8.7),
-        MovieProductRow(id: UUID(), title: "The Godfather", genre: "Crime", rating: 9.2)
-    ]
-}
-
 struct HomeView: View {
     @State private var filters = FilterModel.mocks
     @State private var selectedFilter: FilterModel? = nil
@@ -52,24 +23,11 @@ struct HomeView: View {
                 Color.clear.frame(height: headerStackHeight)
                 
                 VStack {
-                    if let hero = heroProduct {
-                        NetflixHeroCell(
-                            imageResource: hero.imageResource,
-                            isNetflixFilm: hero.isNetflixFilm,
-                            title: hero.title,
-                            categories: hero.categories,
-                            onBackgroundPressed: {},
-                            onPlayPressed: {},
-                            onMyListPressed: {}
-                        )
-                        .padding()
+                    if let heroProduct {
+                        heroCell(product: heroProduct)
                     }
                     
-                    ForEach(0..<20) { _ in
-                        Rectangle()
-                            .fill(.red)
-                            .frame(height: 200)
-                    }
+                    
                 }
             }
             .scrollIndicators(.hidden)
@@ -104,7 +62,6 @@ struct HomeView: View {
    }
 
    private func loadData() async throws {
-       try await Task.sleep(for: .seconds(1))
        heroProduct = HeroProduct.mock
        productRows = MovieProductRow.mocks
    }
@@ -122,6 +79,46 @@ struct HomeView: View {
                     .onTapGesture {}
             }
             .font(.title2)
+        }
+    }
+    
+    private func heroCell(product: HeroProduct) -> some View {
+        NetflixHeroCell(
+            imageResource: product.imageResource,
+            isNetflixFilm: product.isNetflixFilm,
+            title: product.title,
+            categories: product.categories,
+            onBackgroundPressed: {},
+            onPlayPressed: {},
+            onMyListPressed: {}
+        )
+        .padding()
+    }
+    
+    var categoryRows: some View {
+        LazyVStack(spacing: 16) {
+            ForEach(productRows) { row in
+                VStack(alignment: .leading) {
+                    Text(row.title)
+                        .font(.headline)
+                        .padding(.horizontal, 16)
+                    
+                    ScrollView(.horizontal) {
+                        LazyHStack {
+                            ForEach(row.products) { product in
+                                NetflixMovieCell(
+                                    imageURL: product.imageURL,
+                                    title: product.title,
+                                    isRecentlyAdded: product.isRecentlyAdded,
+                                    topTenRanking: product.topTenRanking
+                                )
+                            }
+                        }
+                        .padding(.horizontal, 16)
+                    }
+                    .scrollIndicators(.hidden)
+                }
+            }
         }
     }
 }
