@@ -38,8 +38,12 @@ struct HomeView: View {
   }
 
   private func loadData() async throws {
-    heroProduct = HeroProduct.mock
-    productRows = MovieProductRow.mocks
+    if heroProduct == nil {
+      heroProduct = HeroProduct.mock
+    }
+    if productRows.isEmpty {
+      productRows = MovieProductRow.mocks
+    }
   }
   
   private var backgroundGradientLayer: some View {

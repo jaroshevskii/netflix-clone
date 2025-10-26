@@ -10,6 +10,8 @@ import SwiftUI
 struct NetflixDetailView: View {
   var product: MovieProduct
   @State private var progress = 0.2
+  @State private var isMyList = false
+  @State private var products: [MovieProduct] = []
   
   var body: some View {
     ZStack {
@@ -24,7 +26,7 @@ struct NetflixDetailView: View {
         NetflixDetailHeaderView(imageURL: .mockPoster2, progress: progress)
         
         ScrollView(.vertical) {
-          VStack(spacing: 16) {
+          VStack(alignment: .leading, spacing: 16) {
             NetflixDetailProductView(
               title: "Movie Title — Full",
               isNew: true,
@@ -35,12 +37,40 @@ struct NetflixDetailView: View {
               descriptionText: "This is the full description for the selected title and it should go multiple lines.",
               castText: "Cast: Nick, Your Name, Someone Else"
             )
+            
+            HStack(spacing: 32) {
+              MyListButton(isMyList: isMyList) {
+                isMyList.toggle()
+              }
+              
+              RateButton { option in
+                // do some shit
+              }
+              
+              ShareButton(url: .mockAvatar1)
+            }
+            .padding(.leading, 32)
+            
+            VStack(alignment: .leading) {
+              Text("More Like This")
+                .font(.headline)
+            }
+            .foregroundStyle(.netflixWhite)
           }
           .padding(8)
         }
         .scrollIndicators(.hidden)
       }
     }
+    .task {
+      try? await loadData()
+    }
+    .toolbar(.hidden, for: .navigationBar)
+  }
+  
+  private func loadData() async throws {
+    guard products.isEmpty else { return }
+    products = MovieProduct.mocksAwardWinners
   }
 }
 
