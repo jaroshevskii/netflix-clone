@@ -16,6 +16,8 @@ struct MovieProduct: Identifiable {
 }
 
 extension MovieProduct {
+  static let mock = MovieProduct(id: UUID(), title: "Inception", imageURL: URL(string: "https://picsum.photos/id/11/200/300")!, isRecentlyAdded: true, topTenRanking: nil)
+  
   static let mocksTrending = [
     MovieProduct(id: UUID(), title: "Inception", imageURL: URL(string: "https://picsum.photos/id/11/200/300")!, isRecentlyAdded: true, topTenRanking: nil),
     MovieProduct(id: UUID(), title: "Dune: Part Two", imageURL: URL(string: "https://picsum.photos/id/12/200/300")!, isRecentlyAdded: true, topTenRanking: nil),
