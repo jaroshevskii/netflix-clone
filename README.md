@@ -2,11 +2,11 @@
 
 A Netflix-style iOS app clone built with SwiftUI, featuring custom components and smooth animations.
 
-# Demo
+## Demo
 
 https://github.com/user-attachments/assets/06d78f26-83a8-4bd0-a457-e749d8dc89d3
 
-# Features
+## Features
 
 - **Home Screen**
   - Horizontally scrolling carousels of movies and shows 🎞️
@@ -23,13 +23,13 @@ https://github.com/user-attachments/assets/06d78f26-83a8-4bd0-a457-e749d8dc89d3
   - Dynamic layouts with `LazyVGrid` and `LazyHStack`
   - Modular architecture for easy component reuse
 
-# Contributing
+## Contributing
 
 Contributions are welcome! Feel free to submit pull requests for:  
   - Adding new animations or transitions  
   - Enhancing UI/UX  
   - Integrating network API for live data
 
-# License
+## License
 
 This project is licensed under the **MIT License**. See the [LICENSE](LICENSE.md) file for details.
