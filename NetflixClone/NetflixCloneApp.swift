@@ -15,3 +15,7 @@ struct NetflixCloneApp: App {
     }
   }
 }
+
+#Preview {
+  HomeView()
+}

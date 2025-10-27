@@ -15,6 +15,9 @@ struct HomeView: View {
   @State private var currentUser: User? = nil
   @State private var productRows: [MovieProductRow] = []
   @State private var scrollOffset = 0.0
+  @State private var selectedMovieProduct: HeroProduct?
+  
+  @Environment(\.dismiss) private var dismiss
     
   var body: some View {
     ZStack(alignment: .top) {
@@ -32,6 +35,9 @@ struct HomeView: View {
         headerStackHeight = value
       }
     }
+    .sheet(item: $selectedMovieProduct) { product in
+      NetflixMovieDetailView(product: product)
+    }
     .task {
       try? await loadData()
     }
@@ -44,6 +50,10 @@ struct HomeView: View {
     if productRows.isEmpty {
       productRows = MovieProductRow.mocks
     }
+  }
+  
+  private func onProductPressed(product: HeroProduct) {
+    selectedMovieProduct = product
   }
   
   private var backgroundGradientLayer: some View {
@@ -130,6 +140,7 @@ struct HomeView: View {
       Text("For You")
         .frame(maxWidth: .infinity, alignment: .leading)
         .font(.title)
+        .onTapGesture { dismiss() }
             
       HStack(spacing: 16) {
         Image(systemName: "tv.badge.wifi")
@@ -147,8 +158,8 @@ struct HomeView: View {
       isNetflixFilm: product.isNetflixFilm,
       title: product.title,
       categories: product.categories,
-      onBackgroundPressed: {},
-      onPlayPressed: {},
+      onBackgroundPressed: { onProductPressed(product: product) },
+      onPlayPressed: { onProductPressed(product: product) },
       onMyListPressed: {}
     )
     .padding()

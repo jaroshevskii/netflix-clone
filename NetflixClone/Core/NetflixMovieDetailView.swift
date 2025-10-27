@@ -1,5 +1,5 @@
 //
-//  NetflixDetailView.swift
+//  NetflixMovieDetailView.swift
 //  NetflixClone
 //
 //  Created by Sasha Jaroshevskii on 10/26/25.
@@ -7,12 +7,14 @@
 
 import SwiftUI
 
-struct NetflixDetailView: View {
-  var product: MovieProduct
+struct NetflixMovieDetailView: View {
+  var product: HeroProduct
   @State private var progress = 0.2
   @State private var isMyList = false
   @State private var products: [MovieProduct] = []
   
+  @Environment(\.dismiss) private var dismiss
+
   var body: some View {
     ZStack {
       Color.netflixBlack
@@ -23,7 +25,9 @@ struct NetflixDetailView: View {
         .opacity(0.3)
       
       VStack(spacing: 0) {
-        NetflixDetailHeaderView(imageURL: .mockPoster2, progress: progress)
+        NetflixDetailHeaderView(imageURL: .mockPoster2, progress: progress, onXMarkPressed:  {
+          dismiss()
+        })
         
         ScrollView(.vertical) {
           VStack(alignment: .leading, spacing: 16) {
@@ -102,7 +106,7 @@ struct NetflixDetailView: View {
 }
 
 #Preview {
-  NetflixDetailView(product: .mock)
+  NetflixMovieDetailView(product: .mock)
 }
 
 struct NetflixDetailHeaderView: View {
@@ -153,7 +157,7 @@ struct NetflixDetailHeaderView: View {
         .foregroundStyle(.netflixWhite)
         .font(.subheadline)
         .fontWeight(.bold)
-        .padding(8)
+        .padding(16)
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topTrailing)
       }
     }
@@ -164,7 +168,7 @@ struct NetflixDetailHeaderView: View {
 #Preview("NetflixDetailHeaderView") {
   NetflixDetailHeaderView(
     imageURL: .mockPoster1,
-    progress: 0.2
+    progress: 0.2,
   )
 }
 
