@@ -27,35 +27,11 @@ struct NetflixDetailView: View {
         
         ScrollView(.vertical) {
           VStack(alignment: .leading, spacing: 16) {
-            NetflixDetailProductView(
-              title: "Movie Title — Full",
-              isNew: true,
-              releasedYear: "2025",
-              seasonsCount: 3,
-              hasClosedCaptions: true,
-              topTenRank: 6,
-              descriptionText: "This is the full description for the selected title and it should go multiple lines.",
-              castText: "Cast: Nick, Your Name, Someone Else"
-            )
+            detailsProductSection
             
-            HStack(spacing: 32) {
-              MyListButton(isMyList: isMyList) {
-                isMyList.toggle()
-              }
-              
-              RateButton { option in
-                // do some shit
-              }
-              
-              ShareButton(url: .mockAvatar1)
-            }
-            .padding(.leading, 32)
+            buttonsSection
             
-            VStack(alignment: .leading) {
-              Text("More Like This")
-                .font(.headline)
-            }
-            .foregroundStyle(.netflixWhite)
+            productsGridSection
           }
           .padding(8)
         }
@@ -68,9 +44,60 @@ struct NetflixDetailView: View {
     .toolbar(.hidden, for: .navigationBar)
   }
   
+  private var detailsProductSection: some View {
+    NetflixDetailProductView(
+      title: "Movie Title — Full",
+      isNew: true,
+      releasedYear: "2025",
+      seasonsCount: 3,
+      hasClosedCaptions: true,
+      topTenRank: 6,
+      descriptionText: "This is the full description for the selected title and it should go multiple lines.",
+      castText: "Cast: Nick, Your Name, Someone Else"
+    )
+  }
+  
+  private var buttonsSection: some View {
+    HStack(spacing: 32) {
+      MyListButton(isMyList: isMyList) {
+        isMyList.toggle()
+      }
+      
+      RateButton { option in
+        // do some shit
+      }
+      
+      ShareButton(url: .mockAvatar1)
+    }
+    .padding(.leading, 32)
+  }
+  
+  private var productsGridSection: some View {
+    VStack(alignment: .leading) {
+      Text("More Like This")
+        .font(.headline)
+      
+      LazyVGrid(
+        columns: Array(repeating: GridItem(.flexible(), spacing: 8), count: 3),
+        alignment: .center,
+        spacing: 8
+      ) {
+        ForEach(products) { product in
+          NetflixMovieCell(
+            imageURL: product.imageURL,
+            title: product.title,
+            isRecentlyAdded: product.isRecentlyAdded,
+            topTenRanking: nil
+          )
+        }
+      }
+    }
+    .foregroundStyle(.netflixWhite)
+  }
+  
   private func loadData() async throws {
     guard products.isEmpty else { return }
-    products = MovieProduct.mocksAwardWinners
+    products = MovieProduct.mocksTop10
   }
 }
 
